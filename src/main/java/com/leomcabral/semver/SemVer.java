@@ -46,25 +46,19 @@ public class SemVer implements Comparable<SemVer>{
 
     @Override
     public int compareTo(SemVer other) {
-        if (this.major > other.getMajor()) {
-            return 1;
-        } else if (this.major < other.getMajor()) {
-            return -1;
-        } else {
-            if (this.minor > other.getMinor()) {
-                return 1;
-            } else if (this.minor < other.getMinor()) {
-                return -1;
-            } else {
-                if (this.patch > other.getPatch()) {
-                    return 1;
-                } else if (this.patch < other.getPatch()) {
-                    return -1;
-                } else {
-                    return 0;
-                }
+        int[] v1 = new int[] {major, minor, patch};
+        int[] v2 = new int[] {other.getMajor(), other.getMinor(), other.getPatch()};
+
+        int comparison = 0;
+
+        for(int i = 0; comparison == 0 && i < v1.length; i++) {
+            if (v1[i] > v2[i]) {
+                comparison = 1;
+            } else if (v1[i] < v2[i]) {
+                comparison = -1;
             }
         }
+        return comparison;
     }
 
 }
