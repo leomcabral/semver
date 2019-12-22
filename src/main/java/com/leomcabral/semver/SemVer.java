@@ -2,9 +2,9 @@ package com.leomcabral.semver;
 
 /**
  *
- * @author v7ji
+ * @author Leonardo de M. Cabral
  */
-public class SemVer implements Comparable<SemVer>{
+public final class SemVer implements Comparable<SemVer>{
 
     private final int major;
     private final int minor;
@@ -26,6 +26,10 @@ public class SemVer implements Comparable<SemVer>{
         this.major = Integer.parseInt(split[0]);
         this.minor = Integer.parseInt(split[1]);
         this.patch = Integer.parseInt(split[2]);
+    }
+
+    public static SemVer of(String value) {
+      return new SemVer(value);
     }
 
     public int getMajor() {

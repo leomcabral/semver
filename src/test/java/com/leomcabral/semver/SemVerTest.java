@@ -2,41 +2,53 @@ package com.leomcabral.semver;
 
 import java.util.Arrays;
 
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
 
 /**
  *
- * @author v7ji
+ * @author Leonardo de M. Cabral
  */
-public class SemVerTest {
+class SemVerTest {
 
-    public SemVerTest() {
+    @ParameterizedTest
+    @CsvSource({
+        "0.0.1, 0.0.2",
+        "0.1.0, 0.2.0",
+        "1.0.0, 2.0.0",
+        "0.1.1, 0.1.2",
+        "1.1.1, 1.1.2"
+    })
+    @DisplayName("V1 is lower than V2")
+    void v1LowerV2(String v1, String v2) {
+      SemVer semVer1 = SemVer.of(v1);
+      SemVer semVer2 = SemVer.of(v2);
+      assertThat(semVer1.compareTo(semVer2), is(-1));
     }
 
-    @Test
-    public void testCompareToOtherGreather() {
-        String[][] versions = new String[][] {
-            new String[] { "0.0.1", "0.0.2" },
-            new String[] { "0.1.0", "0.2.0" },
-            new String[] { "1.0.0", "2.0.0" },
-            new String[] { "0.1.1", "0.1.2" },
-            new String[] { "1.1.1", "1.1.2" }
-        };
-
-        for (int i = 0; i < versions.length; i++) {
-            String[] version = versions[i];
-            SemVer semVer1 = new SemVer(version[0]);
-            SemVer semVer2 = new SemVer(version[1]);
-
-            assertThat(String.format("Fail on check of v1=%s and v2=%s", version[0], version[1]), semVer1.compareTo(semVer2), is(-1));
-        }
-    }
+  @ParameterizedTest
+  @CsvSource({
+      "0.0.2, 0.0.1",
+      "0.2.0, 0.1.0",
+      "2.0.0, 1.0.0",
+      "0.1.2, 0.1.1",
+      "1.1.2, 1.1.1"
+  })
+  @DisplayName("V1 is greater than V2")
+  void v1GreaterV2(String v1, String v2) {
+    SemVer semVer1 = SemVer.of(v1);
+    SemVer semVer2 = SemVer.of(v2);
+    assertThat(semVer1.compareTo(semVer2), is(1));
+  }
 
     @Test
-    public void testSort() {
+    @DisplayName("Can sort versions")
+    void testSort() {
         String[] vers = new String[] {
             "1.7.3", "4.1.123", "1.1.1", "2.65.4", "4.1.1"
         };
@@ -50,7 +62,8 @@ public class SemVerTest {
     }
 
     @Test
-    public void testGetVersion() {
+    @DisplayName("")
+    void testGetVersion() {
         SemVer sv = new SemVer("2.4.3");
         assertThat(sv.getVersion(), is("2.4.3"));
     }
